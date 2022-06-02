@@ -1,12 +1,20 @@
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Container } from '@mui/system';
 import { Button, Card, Grid, TextField,Paper, Typography, List, ListItem, Checkbox, ListItemIcon } from '@mui/material';
 import AddTaskIcon from '@mui/icons-material/AddTask';
+import { JavascriptOutlined } from '@mui/icons-material';
 function App() {
     const [task,setTask] = useState('');
-    const [data,SetData] = useState([]);
-    const[isTicked,setIsTicked] = useState(false);
+    const [data,SetData] = useState(()=>{
+        let saveTodos = localStorage.getItem('todos');
+        if(saveTodos){
+            return JSON.parse(saveTodos);
+        }
+        else{
+            return [];
+        }
+    });
     const handelInsert=()=>{
         let newArray = [...data,{id:data.length+1,title:task,status:true}]
         SetData(newArray);
@@ -16,14 +24,15 @@ function App() {
     const handelDelet=(id)=>{
         SetData(data.filter((task)=>task.id !== id))
     }
-    const handleChecked=(id)=>{
-        if(isTicked){
+    useEffect(()=>{
+        localStorage.setItem('todos',JSON.stringify(data))
+    },[data])
+    const handleChecked=(id,status)=>{
+        if(!status){
             SetData(data.map((item)=>(item.id === id)? {...item,status:true}:item))
-            setIsTicked(false);
         }
         else{
             SetData(data.map((item)=>(item.id === id)? {...item,status:false}:item))
-            setIsTicked(true);
         }
     }
   return(
@@ -44,7 +53,11 @@ function App() {
                                     data.map((value,key) => (
                                     <ListItem key={key} secondaryAction={<Button variant='contained' color='error' onClick={()=>handelDelet(value.id)}>Delete</Button>}>
                                         <ListItemIcon>
-                                            <Checkbox onChange={() => handleChecked(value.id)}></Checkbox>
+                                            {
+                                                (value.status)?
+                                                <Checkbox  onChange={() => handleChecked(value.id,value.status)} />:
+                                                <Checkbox defaultChecked onChange={() => handleChecked(value.id,value.status)} />
+                                            }
                                         </ListItemIcon>
                                         {value.status && value.title}
                                         {(!value.status) && <del>{value.title}</del>}
