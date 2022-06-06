@@ -40,9 +40,7 @@ function App() {
         <Container>
             <Grid container sx={{justifyContent:"center", }}>
                 <Grid item lg={6}>
-                    <Typography variant='h2' sx={{color:'#ddd',textAlign:'center',backgroundColor:"red",borderRadius:2}} my={2}>
-                        todo App
-                    </Typography>
+                    <Typography variant='h2' sx={{color:'#ddd',textAlign:'center',backgroundColor:"red",borderRadius:2}} my={2}>todo App</Typography>
                         <Card sx={{height:600}}>
                             <Paper elevation={2} sx={{display:'flex',gap:1,padding:1.5}}>
                                 <TextField sx={{width:'90%'}} value={task} onChange={(e) => setTask(e.target.value)} placeholder='e.g buy a milk,food,vegitable etc...'  />
